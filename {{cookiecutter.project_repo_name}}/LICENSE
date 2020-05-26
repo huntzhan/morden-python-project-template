@@ -22,4 +22,5 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 {% else %}
 All Rights Reserved.
+Users may not distribute or modify the code for commercial or non-commercial purposes.
 {% endif %}
