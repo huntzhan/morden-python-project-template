@@ -1,4 +1,4 @@
-[yapf]
+[style]
 based_on_style = google
 dedent_closing_brackets = true
 column_limit = 100
