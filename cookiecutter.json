@@ -1,0 +1,12 @@
+{
+    "author_name": "Hunt Zhan",
+    "author_email": "huntzhan.dev@gmail.com",
+    "author_github_username": "huntzhan",
+    "project_repo_name": "python-project",
+    "project_py_name": "{{ cookiecutter.project_repo_name.lower().replace(' ', '_').replace('-', '_') }}",
+    "version": "0.1.0",
+    "license": [
+        "Not open source",
+        "MIT"
+    ]
+}
