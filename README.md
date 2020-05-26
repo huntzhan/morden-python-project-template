@@ -21,6 +21,6 @@ yapf -i -r <package_name>
 
 Code linting:
 
-```
+```bash
 flake8 <package_name>
 ```
