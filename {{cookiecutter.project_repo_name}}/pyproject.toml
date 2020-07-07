@@ -19,6 +19,12 @@ yapf = "^0.30.0"
 flake8 = "^3.8.2"
 twine = "^3.1.1"
 
+# PyPI Registry.
+# [[tool.poetry.source]]
+# name = "aliyun"
+# url = "https://mirrors.aliyun.com/pypi/simple/"
+# default = true
+
 # CLI.
 # [tool.poetry.scripts]
 # {{cookiecutter.project_repo_name}} = "{{cookiecutter.project_py_name}}:main"
