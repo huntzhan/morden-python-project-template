@@ -41,4 +41,4 @@ For more details:
 * https://packaging.python.org/tutorials/packaging-projects/
 * https://setuptools.readthedocs.io/en/latest/userguide/declarative_config.html
 * https://www.python.org/dev/peps/pep-0508/
-* https://pip.pypa.io/en/stable/reference/pip_install/#vcs-support
+* https://www.python.org/dev/peps/pep-0440/#direct-references
