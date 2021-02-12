@@ -28,9 +28,9 @@ flake8 <package_name>
 ## Virtualenv setup for the project
 
 ```bash
-pyenv virtualenv 3.8.5 $(basename $(pwd))
+pyenv virtualenv 3.8.7 $(basename $(pwd))
 pyenv local $(basename $(pwd))
-PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/ pip install -U pip poetry
-poetry install
+PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/ pip install -U pip
+pip install -e .
 ```
 
