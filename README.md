@@ -30,7 +30,9 @@ flake8 <package_name>
 ```bash
 pyenv virtualenv 3.8.7 $(basename $(pwd))
 pyenv local $(basename $(pwd))
-PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/ pip install -U pip
+export PIP_INDEX_URL=https://mirrors.cloud.tencent.com/pypi/simple/
+pip install -U pip
+pip install -r dev_requirements.txt
 pip install -e .
 ```
 
