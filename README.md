@@ -107,7 +107,8 @@ pyproject_bump_version major
 Distribution:
 
 ```bash
-python -m build
+python setup.py clean --all
+python -m build --wheel
 ```
 
 For more details:
@@ -119,3 +120,4 @@ For more details:
 * https://www.python.org/dev/peps/pep-0508/
 * https://www.python.org/dev/peps/pep-0440/#direct-references
 * https://setuptools.readthedocs.io/en/latest/userguide/datafiles.html
+* https://dev.to/bowmanjd/easily-load-non-python-data-files-from-a-python-package-2e8g
