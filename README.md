@@ -82,7 +82,7 @@ EOF
 )
 
 function pyproject_bump_version {
-    if [ -n "$(git status --porcelain)" ] ; then
+    if [ -n "$(git status --porcelain 2>&1)" ] ; then
         echo 'git status not clean, abort'
         return 1
     fi
@@ -98,6 +98,10 @@ function pyproject_bump_version {
     git tag "$new_version"
     git push origin "$new_version"
 }
+
+pyproject_bump_version patch
+pyproject_bump_version minor
+pyproject_bump_version major
 ```
 
 Distribution:
