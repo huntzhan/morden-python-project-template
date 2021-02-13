@@ -118,3 +118,4 @@ For more details:
 * https://setuptools.readthedocs.io/en/latest/userguide/declarative_config.html
 * https://www.python.org/dev/peps/pep-0508/
 * https://www.python.org/dev/peps/pep-0440/#direct-references
+* https://setuptools.readthedocs.io/en/latest/userguide/datafiles.html
