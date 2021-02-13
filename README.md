@@ -28,6 +28,78 @@ Code linting:
 flake8 <package_name>
 ```
 
+Versioning:
+
+```bash
+PYTHON_SCRIPT=$(
+cat << 'EOF'
+
+import sys
+import re
+import os.path
+
+assert len(sys.argv) == 2
+_, version_mode = sys.argv
+
+version_mode = version_mode.lower()
+if version_mode not in ['major', 'minor', 'patch']:
+    print('invalid version_mode, abort')
+    exit(1)
+
+if not os.path.exists('setup.cfg'):
+    print('setup.cfg not found, abort')
+    exit(1)
+
+with open('setup.cfg') as fin:
+    text = fin.read()
+
+pattern = r'^version = (\d+)\.(\d+)\.(\d+)$'
+matches = re.findall(pattern, text, re.MULTILINE)
+if len(matches) != 1:
+    print('Failed to match the current version, abort')
+    exit(1)
+
+major, minor, patch = matches[0]
+if version_mode == 'major':
+    major = int(major) + 1
+    minor, patch = 0, 0
+elif version_mode == 'minor':
+    minor = int(minor) + 1
+    patch = 0
+else:
+    assert version_mode == 'patch'
+    patch = int(patch) + 1
+new_version = f'{major}.{minor}.{patch}'
+
+text = re.sub(pattern, f'version = {new_version}', text, flags=re.MULTILINE)
+with open('setup.cfg', 'w') as fout:
+    fout.write(text)
+
+print(new_version)
+exit(0)
+
+EOF
+)
+
+function pyproject_bump_version {
+    if [ -n "$(git status --porcelain)" ] ; then
+        echo 'git status not clean, abort'
+        return 1
+    fi
+
+    new_version=$(python -c "$PYTHON_SCRIPT" $1)
+    if [ ! "$?" -eq 0 ] ; then
+        echo 'Failed to bump version, abort'
+        return 1
+    fi
+
+    git commit -am "Bump version to ${new_version}"
+    git push
+    git tag "$new_version"
+    git push origin "$new_version"
+}
+```
+
 Distribution:
 
 ```bash
