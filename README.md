@@ -6,14 +6,24 @@ Install [cookiecutter](https://github.com/audreyr/cookiecutter) if you haven't.
 cookiecutter https://github.com/parseforce/morden-python-project-template.git
 ```
 
-Then, enter the folder you've just created.
+Enter the folder you've just created and initialize the Python virtualenv:
 
 ```bash
 pyenv virtualenv 3.8.7 $(basename $(pwd))
 pyenv local $(basename $(pwd))
 export PIP_INDEX_URL=https://mirrors.cloud.tencent.com/pypi/simple/
 pip install -U pip
+```
+
+Install dependencies:
+
+```bash
 pip install -e .'[dev]'
+
+# Alternatively, cache the packages explicitly.
+export MY_PIP_DOWNLOADED_FOLDER="/Users/huntzhan/.cache/pip-downloaded"
+pip download .'[dev]' --dest "$MY_PIP_DOWNLOADED_FOLDER"
+pip install -e .'[dev]' --no-index --find-links="file://${MY_PIP_DOWNLOADED_FOLDER}"
 ```
 
 Code formatting:
