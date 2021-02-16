@@ -1,3 +1,3 @@
-# {{cookiecutter.project_repo_name}}
+# {{cookiecutter.project_name}}
 
 TODO

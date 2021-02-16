@@ -3,7 +3,7 @@
 Install [cookiecutter](https://github.com/audreyr/cookiecutter) if you haven't.
 
 ```bash
-cookiecutter https://github.com/parseforce/morden-python-project-template.git
+cookiecutter https://github.com/huntzhan/morden-python-project-template.git
 ```
 
 Enter the folder you've just created and initialize the Python virtualenv:
