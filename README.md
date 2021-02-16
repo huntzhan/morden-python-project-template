@@ -26,6 +26,93 @@ pip download .'[dev]' --dest "$MY_PIP_DOWNLOADED_FOLDER"
 pip install -e .'[dev]' --no-index --find-links="file://${MY_PIP_DOWNLOADED_FOLDER}"
 ```
 
+Or you can execute the following function:
+
+```bash
+function pyproject_init {
+    # Parse arguments.
+    local arg git_remote pip_cache_folder python_version pip_install_tag
+
+    while getopts 'r:c:p:t' arg ; do
+        case "$arg" in
+            r) git_remote=${OPTARG} ;;
+            c) pip_cache_folder=${OPTARG} ;;
+            p) python_version=${OPTARG} ;;
+            t) pip_install_tag=${OPTARG} ;;
+            *) return 1
+        esac
+    done
+
+    echo "git_remote=${git_remote}"
+    echo "pip_cache_folder=${pip_cache_folder}"
+    echo "python_version=${python_version}"
+    echo "pip_install_tag=${pip_install_tag}"
+
+    if [ -z "$git_remote" ] ; then
+        echo "-r is required, abort"
+        return 1
+    fi
+
+    # Make sure cwd is not git initialized.
+    if git rev-parse --git-dir > /dev/null 2>&1 ; then
+        echo "Git initialized, abort."
+        return 1
+    fi
+
+    # Initialize pyenv virtualenv.
+    folder_name=$(basename $(pwd))
+
+    if pyenv virtualenv-prefix "$folder_name" > /dev/null 2>&1 ; then
+        echo "pyenv virtualenv name=${folder_name} exists, abort"
+        return 1
+    fi
+
+    if [ -z "$python_version" ] ; then
+        python_version=3.8.7
+    fi
+    echo "pyenv virtualenv name=${folder_name}, python_version=${python_version}"
+
+    pyenv virtualenv 3.8.7 "$folder_name"
+    pyenv local "$folder_name"
+    if [ "$?" -ne 0 ] ; then
+        echo "Failed to setup pyenv virtualenv name=${folder_name}, abort"
+        return 1
+    fi
+
+    # Install dependencies.
+    if [ -z "$pip_install_tag" ] ; then
+        pip_install_tag=dev
+    fi
+    echo "pip_install_tag=${pip_install_tag}"
+
+    if [ -n "$pip_cache_folder" ] ; then
+        if [ ! -d "$pip_cache_folder" ] ; then
+            echo "pip_cache_folder=${pip_cache_folder} is not a folder, abort"
+            return 1
+        fi
+        pip download "$(pwd)[${pip_install_tag}]" --dest "$pip_cache_folder"
+        pip install -e "$(pwd)[${pip_install_tag}]" --no-index --find-links="file://${pip_cache_folder}"
+    else
+        pip install -e "$(pwd)[${pip_install_tag}]"
+    fi
+
+    if [ "$?" -ne 0 ] ; then
+        echo "Failed install dependencies, abort"
+        return 1
+    fi
+
+    # Initialize git.
+    git init
+    git add --all
+    git commit -am 'init'
+    git branch -M master
+    git remote add origin "$git_remote"
+    git push -u origin master
+}
+
+pyproject_init
+```
+
 Code formatting:
 
 ```bash
