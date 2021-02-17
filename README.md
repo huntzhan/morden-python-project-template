@@ -8,7 +8,7 @@ A minimum project template for morden python development.
 
 1. Install [cookiecutter](https://github.com/audreyr/cookiecutter) if you haven't.
 
-2. Run the following command to Initialize project from the template:
+2. Run the following command to Initialize your project from this template:
 
    ```bash
    cookiecutter https://github.com/huntzhan/morden-python-project-template.git
@@ -16,13 +16,13 @@ A minimum project template for morden python development.
 
 ### Save and load the helper snippets
 
-Copy [the helper snippet](helper_snippet.sh) to `~/.bashrc` (or to the other configuration file according to your setup)
+Copy [the helper snippet](helper_snippet.sh) to `~/.bashrc` (or to the other configuration file according to your setup) and load those bash functions.
 
 ### Initialize the pyenv virtualenv
 
 1. Install [pyenv](https://github.com/pyenv/pyenv) if you haven't.
 
-2. The following command will setup virtualenv, install deps and push to git remote repository.
+2. The following command will setup virtualenv, install deps and push to git remote repository for you.
 
 3. Command:
 
@@ -42,9 +42,9 @@ Copy [the helper snippet](helper_snippet.sh) to `~/.bashrc` (or to the other con
 
 1. Run after initialization.
 
-2. Run if `install_requires` or `extras_require` is changed.
+2. Run if `install_requires` or `extras_require` has been changed.
 
-3. The following command will install the required distributions.
+3. The following command will install the required distributions for you.
 
 4. Command:
 
@@ -64,7 +64,7 @@ Copy [the helper snippet](helper_snippet.sh) to `~/.bashrc` (or to the other con
 
 2. Run if you want to make a release. Make sure all the changes have been committed.
 
-3. The following command will change the `version` in `setup.cfg`, commit automatically, push to remote as well as creating a new tag in remote.
+3. The following command will change the `version` in `setup.cfg`, commit automatically, push to remote as well as creating a new tag in remote for you.
 
 4. Command:
 
