@@ -1,34 +1,59 @@
-# A Minimum Morden Project Template For Python Development
+## Overview
 
-Install [cookiecutter](https://github.com/audreyr/cookiecutter) if you haven't.
+A minimum project template for morden python development.
 
-```bash
-cookiecutter https://github.com/huntzhan/morden-python-project-template.git
-```
+## Usage
 
-Enter the folder you've just created and initialize the Python virtualenv:
+### Initialize project from the template
 
-```bash
-pyenv virtualenv 3.8.7 $(basename $(pwd))
-pyenv local $(basename $(pwd))
-export PIP_INDEX_URL=https://mirrors.cloud.tencent.com/pypi/simple/
-pip install -U pip
-```
+1. Install [cookiecutter](https://github.com/audreyr/cookiecutter) if you haven't.
 
-Install dependencies:
+2. Run the following command to Initialize project from the template:
 
-```bash
-pip install -e .'[dev]'
+   ```bash
+   cookiecutter https://github.com/huntzhan/morden-python-project-template.git
+   ```
 
-# Alternatively, cache the packages explicitly.
-export MY_PIP_DOWNLOADED_FOLDER="/Users/huntzhan/.cache/pip-downloaded"
-pip download .'[dev]' --dest "$MY_PIP_DOWNLOADED_FOLDER"
-pip install -e .'[dev]' --no-index --find-links="file://${MY_PIP_DOWNLOADED_FOLDER}"
-```
+### Save and load the helper snippets
 
-Or you can execute the following function:
+Keep the following helper snippets to `~/.bashrc` (or to the other configuration file according to your setup):
 
 ```bash
+function pyproject_install_deps {
+    # Parse arguments.
+    local arg pip_cache_folder pip_install_tag
+
+    while getopts 'c:t' arg ; do
+        case "$arg" in
+            c) pip_cache_folder=${OPTARG} ;;
+            t) pip_install_tag=${OPTARG} ;;
+            *) return 1
+        esac
+    done
+
+    if [ -z "$pip_install_tag" ] ; then
+        pip_install_tag=dev
+    fi
+    echo "pip_install_tag=${pip_install_tag}"
+
+    if [ -n "$pip_cache_folder" ] ; then
+        if [ ! -d "$pip_cache_folder" ] ; then
+            echo "pip_cache_folder=${pip_cache_folder} is not a folder, abort"
+            return 1
+        fi
+        pip download "$(pwd)[${pip_install_tag}]" --dest "$pip_cache_folder"
+        pip install -e "$(pwd)[${pip_install_tag}]" --no-index --find-links="file://${pip_cache_folder}"
+    else
+        pip install -e "$(pwd)[${pip_install_tag}]"
+    fi
+
+    exit_code="$?"
+    if [ "$exit_code" -ne 0 ] ; then
+        echo "Failed install dependencies, abort"
+    fi
+    return "$exit_code"
+}
+
 function pyproject_init {
     # Parse arguments.
     local arg git_remote pip_cache_folder python_version pip_install_tag
@@ -80,24 +105,8 @@ function pyproject_init {
     fi
 
     # Install dependencies.
-    if [ -z "$pip_install_tag" ] ; then
-        pip_install_tag=dev
-    fi
-    echo "pip_install_tag=${pip_install_tag}"
-
-    if [ -n "$pip_cache_folder" ] ; then
-        if [ ! -d "$pip_cache_folder" ] ; then
-            echo "pip_cache_folder=${pip_cache_folder} is not a folder, abort"
-            return 1
-        fi
-        pip download "$(pwd)[${pip_install_tag}]" --dest "$pip_cache_folder"
-        pip install -e "$(pwd)[${pip_install_tag}]" --no-index --find-links="file://${pip_cache_folder}"
-    else
-        pip install -e "$(pwd)[${pip_install_tag}]"
-    fi
-
+    pyproject_install_deps -c "$pip_cache_folder" -t "$pip_install_tag"
     if [ "$?" -ne 0 ] ; then
-        echo "Failed install dependencies, abort"
         return 1
     fi
 
@@ -110,25 +119,7 @@ function pyproject_init {
     git push -u origin master
 }
 
-pyproject_init
-```
-
-Code formatting:
-
-```bash
-yapf -i -r <package_name>
-```
-
-Code linting:
-
-```bash
-flake8 <package_name>
-```
-
-Versioning:
-
-```bash
-PYTHON_SCRIPT=$(
+PYPROJECT_BUMP_VERSION_PYTHON_SCRIPT=$(
 cat << 'EOF'
 
 import sys
@@ -184,7 +175,7 @@ function pyproject_bump_version {
         return 1
     fi
 
-    new_version=$(python -c "$PYTHON_SCRIPT" $1)
+    new_version=$(python -c "$PYPROJECT_BUMP_VERSION_PYTHON_SCRIPT" $1)
     if [ ! "$?" -eq 0 ] ; then
         echo 'Failed to bump version, abort'
         return 1
@@ -195,20 +186,88 @@ function pyproject_bump_version {
     git tag "$new_version"
     git push origin "$new_version"
 }
-
-pyproject_bump_version patch
-pyproject_bump_version minor
-pyproject_bump_version major
 ```
 
-Distribution:
+### Initialize the pyenv virtualenv
 
-```bash
-python setup.py clean --all
-python -m build --wheel
-```
+1. Install [pyenv](https://github.com/pyenv/pyenv) if you haven't.
 
-For more details:
+2. The following command will setup virtualenv, install deps and push to git remote repository.
+
+3. Command:
+
+   ```bash
+   pyproject_init -r git@github.com:<username>/<repo>.git
+   
+   # Parameters:
+   # -r: Required. The git remote url.
+   # -c: Optional. Path to the pip cache folder.
+   #     If provided, will explicitly download the required distributions to
+   #     and install distributions from such folder.
+   # -p: Optional. Python version. Default to '3.8.7'.
+   # -t: Optional. Setup extra tag. Default to 'dev'.
+   ```
+
+### Update dependencies
+
+1. Run after initialization.
+
+2. Run if `install_requires` or `extras_require` is changed.
+
+3. The following command will install the required distributions.
+
+4. Command:
+
+   ```bash
+   pyproject_install_deps
+   
+   # Parameters:
+   # -c: Optional. Path to the pip cache folder.
+   #     If provided, will explicitly download the required distributions to
+   #     and install distributions from such folder.
+   # -t: Optional. Setup extra tag. Default to 'dev'.
+   ```
+
+### Make a release
+
+1. Run after initialization.
+
+2. Run if you want to make a release. Make sure all the changes have been committed.
+
+3. The following command will change the `version` in `setup.cfg`, commit automatically, push to remote as well as creating a new tag in remote.
+
+4. Command:
+
+   ```bash
+   pyproject_bump_version <mode>
+   
+   # Parameters:
+   # mode: Required. Should be one of the ['major', 'minor', 'patch']
+   ```
+
+### Others
+
+1. Code formatting:
+
+   ```bash
+   yapf -i -r <package_name>
+   ```
+
+2. Code linting:
+
+   ```bash
+   flake8 <package_name>
+   ```
+
+3. Build a distribution:
+
+   ```bash
+   python setup.py clean --all
+   python -m build --wheel
+   ```
+
+
+### References
 
 * https://www.python.org/dev/peps/pep-0517
 * https://www.python.org/dev/peps/pep-0518
@@ -218,3 +277,4 @@ For more details:
 * https://www.python.org/dev/peps/pep-0440/#direct-references
 * https://setuptools.readthedocs.io/en/latest/userguide/datafiles.html
 * https://dev.to/bowmanjd/easily-load-non-python-data-files-from-a-python-package-2e8g
+
