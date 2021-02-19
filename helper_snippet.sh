@@ -71,6 +71,8 @@ function pyproject_init {
         echo "Failed to setup pyenv virtualenv name=${folder_name}, abort"
         return 1
     fi
+    # Upgrade pip.
+    pip install -U pip
 
     # Install dependencies.
     pyproject_install_deps -c "$pip_cache_folder" -t "$pip_install_tag"
