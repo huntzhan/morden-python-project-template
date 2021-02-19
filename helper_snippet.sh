@@ -52,17 +52,6 @@ function pyproject_init {
     echo "python_version=${python_version}"
     echo "pip_install_tag=${pip_install_tag}"
 
-    if [ -z "$git_remote" ] ; then
-        echo "-r is required, abort"
-        return 1
-    fi
-
-    # Make sure cwd is not git initialized.
-    if git rev-parse --git-dir > /dev/null 2>&1 ; then
-        echo "Git initialized, abort."
-        return 1
-    fi
-
     # Initialize pyenv virtualenv.
     folder_name=$(basename $(pwd))
 
@@ -76,7 +65,7 @@ function pyproject_init {
     fi
     echo "pyenv virtualenv name=${folder_name}, python_version=${python_version}"
 
-    pyenv virtualenv 3.8.7 "$folder_name"
+    pyenv virtualenv "$python_version" "$folder_name"
     pyenv local "$folder_name"
     if [ "$?" -ne 0 ] ; then
         echo "Failed to setup pyenv virtualenv name=${folder_name}, abort"
@@ -89,13 +78,21 @@ function pyproject_init {
         return 1
     fi
 
-    # Initialize git.
-    git init
-    git add --all
-    git commit -am 'init'
-    git branch -M master
-    git remote add origin "$git_remote"
-    git push -u origin master
+    if [ -n "$git_remote" ] ; then
+        # Make sure cwd is not git initialized.
+        if git rev-parse --git-dir > /dev/null 2>&1 ; then
+            echo "Git initialized, abort."
+            return 1
+        fi
+        # Initialize git.
+        git init
+        git add --all
+        git commit -am 'init'
+        # Push to the remote.
+        git branch -M master
+        git remote add origin "$git_remote"
+        git push -u origin master
+    fi
 }
 
 PYPROJECT_BUMP_VERSION_PYTHON_SCRIPT=$(

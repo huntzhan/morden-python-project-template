@@ -27,10 +27,10 @@ Copy [the helper snippet](helper_snippet.sh) to `~/.bashrc` (or to the other con
 3. Command:
 
    ```bash
-   pyproject_init -r git@github.com:<username>/<repo>.git
+   pyproject_init
    
    # Parameters:
-   # -r: Required. The git remote url.
+   # -r: Optional. The git remote url. If provided, will initialize git and push to remote.
    # -c: Optional. Path to the pip cache folder.
    #     If provided, will explicitly download the required distributions to
    #     and install distributions from such folder.
