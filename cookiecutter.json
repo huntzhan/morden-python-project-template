@@ -3,7 +3,8 @@
     "author_email": "huntzhan.dev@gmail.com",
     "github_username": "huntzhan",
     "project_name": "python-project",
-    "github_repo": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+    "github_repo": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('_', '-') }}",
+    "package_name": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",    
     "version": "0.1.0",
     "license": [
         "Not open source",

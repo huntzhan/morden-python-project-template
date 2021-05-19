@@ -1,3 +1,3 @@
-# {{cookiecutter.project_name}}
+# {{cookiecutter.github_repo}}
 
 TODO
