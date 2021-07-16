@@ -102,7 +102,7 @@ ENV/
 .mypy_cache/
 
 # direnv
-.envrc
+.envrc.private
 
 .vscode/
 data/

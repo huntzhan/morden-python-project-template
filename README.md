@@ -4,30 +4,29 @@ A minimum project template for morden python development.
 
 ## Usage
 
-### Initialize project from the template
+### Prerequisite
 
-1. Install [cookiecutter](https://github.com/audreyr/cookiecutter) if you haven't.
+Please install [cookiecutter](https://github.com/audreyr/cookiecutter),  [pyenv](https://github.com/pyenv/pyenv) and [direnv](https://direnv.net/).
 
-2. Run the following command to Initialize your project from this template:
+### Initialize the project
+
+1. Execute the following command to Initialize your project from the template:
 
    ```bash
    cookiecutter https://github.com/huntzhan/morden-python-project-template.git
    ```
 
-### Save and load the helper snippets
-
-Copy [the helper snippet](helper_snippet.sh) to `~/.bashrc` (or to the other configuration file according to your setup) and load those bash functions.
-
-### Initialize the pyenv virtualenv
-
-1. Install [pyenv](https://github.com/pyenv/pyenv) if you haven't.
-
-2. The following command will setup virtualenv, install deps and push to git remote repository for you.
-
-3. Command:
+1. Activate the helper snippets:
 
    ```bash
-   pyproject_init
+   cd <project>
+   direnv allow
+   ```
+
+1. Execute the following command will setup virtualenv, install deps and optionally push to git remote repository for you:
+
+   ```bash
+   pyproject-init
    
    # Parameters:
    # -r: Optional. The git remote url. If provided, will initialize git and push to remote.
@@ -40,40 +39,28 @@ Copy [the helper snippet](helper_snippet.sh) to `~/.bashrc` (or to the other con
 
 ### Update dependencies
 
-1. Run after initialization.
+Execute the following command to install or upgrade your dependencies. The default behavior is equivalent to `pip install -e .'[dev]'`.
 
-2. Run if `install_requires` or `extras_require` has been changed.
+```bash
+pyproject-install-deps
 
-3. The following command will install the required distributions for you.
-
-4. Command:
-
-   ```bash
-   pyproject_install_deps
-   
-   # Parameters:
-   # -c: Optional. Path to the pip cache folder.
-   #     If provided, will explicitly download the required distributions to
-   #     and install distributions from such folder.
-   # -t: Optional. Setup extra tag. Default to 'dev'.
-   ```
+# Parameters:
+# -c: Optional. Path to the pip cache folder.
+#     If provided, will explicitly download the required distributions to
+#     and install distributions from such folder.
+# -t: Optional. Setup extra tag. Default to 'dev'.
+```
 
 ### Make a release
 
-1. Run after initialization.
+The following command will change the `version` in `setup.cfg`, then commit automatically, and finally push to the default remote as well as creating a new tag in remote for you. Make sure all the changes have been committed.
 
-2. Run if you want to make a release. Make sure all the changes have been committed.
+```bash
+pyproject-bump-version <mode>
 
-3. The following command will change the `version` in `setup.cfg`, commit automatically, push to remote as well as creating a new tag in remote for you.
-
-4. Command:
-
-   ```bash
-   pyproject_bump_version <mode>
-   
-   # Parameters:
-   # mode: Required. Should be one of the ['major', 'minor', 'patch']
-   ```
+# Parameters:
+# mode: Required. Should be one of the ['major', 'minor', 'patch']
+```
 
 ### Others
 
@@ -86,10 +73,16 @@ Copy [the helper snippet](helper_snippet.sh) to `~/.bashrc` (or to the other con
 2. Code linting:
 
    ```bash
-   flake8 <package_name>
+   flake8
    ```
 
-3. Build a distribution:
+3. Execute static analyzer:
+
+   ```bash
+   pytype
+   ```
+
+4. Build a distribution:
 
    ```bash
    python setup.py clean --all
