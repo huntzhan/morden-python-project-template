@@ -60,8 +60,7 @@ function pyproject_bump_version {
         return 1
     fi
 
-    new_version=$(python -c "$PYPROJECT_BUMP_VERSION_PYTHON_SCRIPT" $1)
-    if [ ! "$?" -eq 0 ] ; then
+    if ! new_version=$(python -c "$PYPROJECT_BUMP_VERSION_PYTHON_SCRIPT" "$1") ; then
         echo 'Failed to bump version, abort'
         return 1
     fi

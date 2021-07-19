@@ -23,7 +23,7 @@ function pyproject_init {
     echo "pip_install_tag=${pip_install_tag}"
 
     # Initialize pyenv virtualenv.
-    folder_name=$(basename $(pwd))
+    folder_name=$(basename "$(pwd)")
 
     if pyenv virtualenv-prefix "$folder_name" > /dev/null 2>&1 ; then
         echo "pyenv virtualenv name=${folder_name} exists, abort"
@@ -35,18 +35,19 @@ function pyproject_init {
     fi
     echo "pyenv virtualenv name=${folder_name}, python_version=${python_version}"
 
-    pyenv virtualenv "$python_version" "$folder_name"
-    pyenv local "$folder_name"
-    if [ "$?" -ne 0 ] ; then
-        echo "Failed to setup pyenv virtualenv name=${folder_name}, abort"
+    if ! pyenv virtualenv "$python_version" "$folder_name" ; then
+        echo "Failed to create virtualenv ${folder_name}."
+        return 1
+    fi
+    if ! pyenv local "$folder_name" ; then
+        echo "Failed to create virtualenv ${folder_name}."
         return 1
     fi
     # Upgrade pip.
     pip install -U pip
 
     # Install dependencies.
-    pyproject-install-deps -c "$pip_cache_folder" -t "$pip_install_tag"
-    if [ "$?" -ne 0 ] ; then
+    if ! pyproject-install-deps -c "$pip_cache_folder" -t "$pip_install_tag" ; then
         return 1
     fi
 
