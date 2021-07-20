@@ -104,9 +104,6 @@ ENV/
 # direnv
 .envrc.private
 
-# pytype
-.pytype
-
 .vscode/
 data/
 .*DS_Store
