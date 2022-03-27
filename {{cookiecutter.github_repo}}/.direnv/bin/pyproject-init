@@ -31,7 +31,7 @@ function pyproject_init {
     fi
 
     if [ -z "$python_version" ] ; then
-        python_version=3.8.7
+        python_version=3.8.13
     fi
     echo "pyenv virtualenv name=${folder_name}, python_version=${python_version}"
 
