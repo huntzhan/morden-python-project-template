@@ -1,6 +1,6 @@
 {
     "include": [
-        "vkit",
+        "{{cookiecutter.package_name}}",
         "tests",
     ],
     "exclude": [
