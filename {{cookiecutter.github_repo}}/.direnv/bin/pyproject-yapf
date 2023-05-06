@@ -2,4 +2,12 @@
 set -eo pipefail
 trap "echo 'error: Script failed: see failed command above'" ERR
 
-watchexec -e py 'yapf -i --verbose "${WATCHEXEC_COMMON_PATH}/${WATCHEXEC_WRITTEN_PATH}"'
+function run_watchexec {
+    watchexec -e py 'yapf -i --verbose "${WATCHEXEC_COMMON_PATH}/${WATCHEXEC_WRITTEN_PATH}"'
+}
+
+if [ -n "$PYPROJECT_YAPF_LOGGING_FILE" ] ; then
+    run_watchexec 2>&1 >"$PYPROJECT_YAPF_LOGGING_FILE" &
+else
+    run_watchexec
+fi
